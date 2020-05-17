@@ -121,7 +121,14 @@ def infer_on_stream(args, client):
     last_status = 0
     continue_status = 0
     # 0: init state 1: people in 2: people leaving 3: people out 
-    status = 0 
+    status = 0
+    
+    # calculate inference time
+    infer_start_time = 0
+    
+    # calculate accuracy
+    people_detect = 0
+    People_present = 0
     
     # Initialise the class
     infer_network = Network()
@@ -167,6 +174,9 @@ def infer_on_stream(args, client):
         image = preprocessing(frame, net_input_shape[2], net_input_shape[3])
         
         ### TODO: Start asynchronous inference for specified request ###
+        # calculate inference time
+        infer_start_time = time.time()
+        
         infer_network.exec_net(image)
   
         ### TODO: Wait for the result ###
@@ -174,6 +184,9 @@ def infer_on_stream(args, client):
             
             ### TODO: Get the results of the inference request ###
             result = infer_network.get_output()
+        
+            # calculate inference time
+            # client.publish("person", json.dumps({"count": (time.time() - infer_start_time)}))
             
             ### TODO: Extract any desired stats from the results ###
             current_count, people_leaving, frame = draw_boxes(frame, result, width, height, prob_threshold) 
@@ -193,6 +206,11 @@ def infer_on_stream(args, client):
                     total_count = current_count - last_count
                     client.publish("person", json.dumps({"total": total_count}))
             elif status == 1:
+                
+                # calculate accuracy
+                people_detect += current_count
+                People_present += 1
+                
                 if people_leaving == 1:
                     
                     # people is leaving
@@ -220,6 +238,10 @@ def infer_on_stream(args, client):
             #print("status: {}".format(status))
             
             client.publish("person", json.dumps({"count": current_count}))
+            
+            # calculate accuracy
+            #if People_present != 0:
+            #    client.publish("person", json.dumps({"count": (people_detect/People_present*100)}))
             
             ### TODO: Calculate and send relevant information on ###
             ### current_count, total_count and duration to the MQTT server ###
