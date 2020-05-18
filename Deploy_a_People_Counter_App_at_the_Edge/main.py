@@ -257,7 +257,6 @@ def infer_on_stream(args, client):
             cv2.imwrite('output.jpg', frame)    
 
     # Release the out writer, capture, and destroy any OpenCV windows
-    out.release()
     cap.release()
     cv2.destroyAllWindows()
 
