@@ -117,6 +117,8 @@ def infer_on_stream(args, client):
     total_count = 0
     start_time  = 0
     duration = 0
+
+    request_id = 0
    
     last_status = 0
     continue_status = 0
@@ -177,7 +179,7 @@ def infer_on_stream(args, client):
         # calculate inference time
         infer_start_time = time.time()
         
-        infer_network.exec_net(image)
+        infer_network.exec_net(request_id, image)
   
         ### TODO: Wait for the result ###
         if infer_network.wait() == 0:

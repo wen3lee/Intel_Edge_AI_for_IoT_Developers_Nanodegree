@@ -77,12 +77,12 @@ class Network:
         
         return self.network.inputs[self.input_blob].shape
         
-    def exec_net(self, image):
+    def exec_net(self, request_id, image):
         ### TODO: Start an asynchronous request ###
         ### TODO: Return any necessary information ###
         ### Note: You may need to update the function parameters. ###
         
-        self.exec_network.requests[0].async_infer({self.input_blob: image}) 
+        self.exec_network.requests[request_id].async_infer({self.input_blob: image})
         
         return self.exec_network
 
