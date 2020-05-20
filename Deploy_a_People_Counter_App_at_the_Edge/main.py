@@ -179,7 +179,11 @@ def infer_on_stream(args, client):
         # calculate inference time
         infer_start_time = time.time()
         
-        infer_network.exec_net(request_id, image)
+	# test for faster_rcnn_resnet50_coco
+        image_input = {'image_tensor': image,'image_info': image.shape[1:]}
+        infer_network.exec_net(request_id, image_input)
+
+        #infer_network.exec_net(request_id, image)
   
         ### TODO: Wait for the result ###
         if infer_network.wait() == 0:

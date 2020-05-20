@@ -74,15 +74,21 @@ class Network:
 
     def get_input_shape(self):
         ### TODO: Return the shape of the input layer ###
-        
-        return self.network.inputs[self.input_blob].shape
+
+	# test for faster_rcnn_resnet50_coco
+        return self.network.inputs['image_tensor'].shape
+
+        #return self.network.inputs[self.input_blob].shape
         
     def exec_net(self, request_id, image):
         ### TODO: Start an asynchronous request ###
         ### TODO: Return any necessary information ###
         ### Note: You may need to update the function parameters. ###
         
-        self.exec_network.requests[request_id].async_infer({self.input_blob: image})
+	# test for faster_rcnn_resnet50_coco
+        self.infer_request_handle = self.exec_network.start_async(request_id, inputs=image)
+
+        #self.exec_network.requests[request_id].async_infer({self.input_blob: image})
         
         return self.exec_network
 
