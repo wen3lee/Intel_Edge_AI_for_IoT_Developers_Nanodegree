@@ -29,15 +29,13 @@ def main(args):
     input_img=np.moveaxis(input_img, -1, 0)
 
     # TODO: Prepare the model for inference (create input dict etc.)
-    print(network.inputs)
-    #input_blob = next(iter(network.inputs)
-    #                  input_img
-    
+    input_dict={input_name:input_img}    
+
     start=time.time()
     for _ in range(10):
         # TODO: Run Inference in a Loop
-        exec_network.requests[0].infer({input_blob: image})
-    
+        net.infer(input_dict)    
+
     print(f"Time Taken to run 10 Infernce on CPU is = {time.time()-start} seconds")
 
 if __name__=='__main__':
