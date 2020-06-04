@@ -14,14 +14,14 @@ def main(args):
     start=time.time()
     
     # TODO: Load the model
-    plugin = IECore()
-    network = IENetwork(model=model_structure, weights=model_weights)
-    exec_network = plugin.loadnetwork(network, device_name='CPU')
-    
+    core = IECore()
+    network = core.read_network(model=model_structure, weights=model_weights)
+    net = core.load_network(network=network, device_name='CPU', num_requests=1)
+        
     print(f"Time taken to load model = {time.time()-start} seconds")
     
     # Get the name of the input node
-    input_name=next(iter(model.inputs))
+    input_name=next(iter(network.inputs))
     
     # Reading and Preprocessing Image
     input_img=cv2.imread('/data/resources/car.png')
@@ -29,14 +29,14 @@ def main(args):
     input_img=np.moveaxis(input_img, -1, 0)
 
     # TODO: Prepare the model for inference (create input dict etc.)
-    input_dict={input_name:input_img}    
-
+    input_dict={input_name:input_img}
+    
     start=time.time()
     for _ in range(10):
         # TODO: Run Inference in a Loop
-        net.infer(input_dict)    
-
-    print(f"Time Taken to run 10 Infernce on CPU is = {time.time()-start} seconds")
+        net.infer(input_dict)
+    
+    print(f"Time Taken to run 10 inference on CPU is = {time.time()-start} seconds")
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser()
