@@ -10,3 +10,5 @@ In this project, the Intel OpenVINO Toolkit is used to build the People Counter 
 * Exercise
 1. CPU_and_the_DevCloud
 Practice requesting the CPU on Intel DevCloud and loading the model.
+2. IGPU_and_the_DevCloud
+Integrated GPU and the DevCloud
