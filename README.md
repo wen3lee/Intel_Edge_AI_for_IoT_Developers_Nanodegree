@@ -12,3 +12,5 @@ In this project, the Intel OpenVINO Toolkit is used to build the People Counter 
 Practice requesting the CPU on Intel DevCloud and loading the model.
 2. IGPU_and_the_DevCloud
 Integrated GPU and the DevCloud
+3. VPU_and_the_DevCloud
+Integrated VPU and the DevCloud
