@@ -16,8 +16,9 @@ class ModelHeadPoseEstimation:
         self.model_weights=model_name+'.bin'
         self.model_structure=model_name+'.xml'
         self.device=device
-	
-        self.model=IENetwork(self.model_structure, self.model_weights)
+
+        self.core = IECore()
+        self.model = self.core.read_network(model=self.model_structure, weights=self.model_weights)
 
         self.input_name=next(iter(self.model.inputs))
         self.input_shape=self.model.inputs[self.input_name].shape
@@ -30,8 +31,7 @@ class ModelHeadPoseEstimation:
         This method is for loading the model to the device specified by the user.
         If your model requires any Plugins, this is where you can load them.
         '''
-        self.core = IECore()
-        self.net = core.load_network(network=self.model, device_name=self.device, num_requests=1)
+        self.net = self.core.load_network(network=self.model, device_name=self.device, num_requests=1)
 
     def predict(self, image):
         '''
@@ -43,7 +43,6 @@ class ModelHeadPoseEstimation:
         coords = self.preprocess_outputs(outputs[self.output_name])
 
     def check_model(self):
-        #raise NotImplementedError
         pass
 
     def preprocess_input(self, image):
@@ -54,11 +53,11 @@ class ModelHeadPoseEstimation:
         # input shape: 1xCxHxW    
         height = self.input_shape[2]
         width = self.input_shape[3]
-        
+
         image = cv2.resize(image, (width, height))
         image = image.transpose((2,0,1))
         image = image.reshape(1, 3, height, width)
-        
+
         return image
 
     def preprocess_output(self, outputs):
@@ -69,4 +68,3 @@ class ModelHeadPoseEstimation:
         # angle_y_fc: [1, 1] - Estimated yaw
         # angle_p_fc: [1, 1] - Estimated pitch
         # angle_r_fc: [1, 1] - Estimated roll
-        
