@@ -2,6 +2,7 @@
 This is a sample class for a model. You may choose to use it as-is or make any changes to it.
 This has been provided just to give you an idea of how to structure your model class.
 '''
+import cv2
 
 from openvino.inference_engine import IENetwork, IECore
 
@@ -9,7 +10,7 @@ class ModelFacialLandmarksDetection:
     '''
     Class for the Face Detection Model.
     '''
-    def __init__(self, model_name, device='CPU', extensions=None):
+    def __init__(self, model_name, device='CPU'):
         '''
         TODO: Use this to set your instance variables.
         '''
@@ -40,7 +41,11 @@ class ModelFacialLandmarksDetection:
         '''
         frame = self.preprocess_input(image)
         outputs = self.net.infer({self.input_name:frame})
-        coords = self.preprocess_outputs(outputs[self.output_name])
+
+        # debug
+        #print("outputs:{}".format(outputs))
+
+        return self.preprocess_output(image, outputs[self.output_name][0])
 
     def check_model(self):
         pass
@@ -60,9 +65,38 @@ class ModelFacialLandmarksDetection:
 
         return image
 
-    def preprocess_output(self, outputs):
+    def preprocess_output(self, image, outputs):
         '''
         Before feeding the output of this model to the next model,
         you might have to preprocess the output. This function is where you can do that.
         '''
         # output shape: [1, 10], containing a row-vector of 10 floating point values for five landmarks coordinates
+
+        # debug
+        #print("image.shape:{}".format(image.shape))
+        #print("x0:{}, y0:{}".format(outputs[0][0][0], outputs[1][0][0]))
+        #print("x1:{}, y1:{}".format(outputs[2][0][0], outputs[3][0][0]))
+
+        height, width, channel = image.shape
+
+        # left eye
+        left_eye_xmin = int(outputs[0][0][0] * width - 5)
+        left_eye_xmax = int(outputs[0][0][0] * width + 5)
+        left_eye_ymin = int(outputs[1][0][0] * height - 5)
+        left_eye_ymax = int(outputs[1][0][0] * height + 5)
+
+        left_eye_image = image[left_eye_ymin:left_eye_ymax, left_eye_xmin:left_eye_xmax]
+
+        cv2.rectangle(image, (left_eye_xmin, left_eye_ymin), (left_eye_xmax, left_eye_ymax), (0, 0, 255), 2)
+
+        # right eye
+        right_eye_xmin = int(outputs[2][0][0] * width - 5)
+        right_eye_xmax = int(outputs[2][0][0] * width + 5)
+        right_eye_ymin = int(outputs[3][0][0] * height - 5)
+        right_eye_ymax = int(outputs[3][0][0] * height + 5)
+
+        right_eye_image = image[right_eye_ymin:right_eye_ymax, right_eye_xmin:right_eye_xmax]
+
+        cv2.rectangle(image, (right_eye_xmin, right_eye_ymin), (right_eye_xmax, right_eye_ymax), (0, 0, 255), 2)
+
+        return left_eye_image, right_eye_image

@@ -42,9 +42,9 @@ class ModelFaceDetection:
         '''
         frame = self.preprocess_input(image)
         outputs = self.net.infer({self.input_name:frame})
-        coords, image = self.preprocess_output(image, outputs[self.output_name])
+        cropped_face = self.preprocess_output(image, outputs[self.output_name])
 
-        return coords, image
+        return cropped_face
 
     def check_model(self):
         pass
@@ -73,7 +73,7 @@ class ModelFaceDetection:
         Before feeding the output of this model to the next model,
         you might have to preprocess the output. This function is where you can do that.
         '''
-        coords = []
+        #coords = []
 
         # output shape: [1, 1, N, 7]
         for box in outputs[0][0]:
@@ -85,11 +85,14 @@ class ModelFaceDetection:
                 xmax = int(box[5] * self.width)
                 ymax = int(box[6] * self.height)
 
-                coords.append([xmin, ymin, xmax, ymax])
+                #coords.append([xmin, ymin, xmax, ymax])
 
-                image = cv2.rectangle(image, (xmin, ymin), (xmax, ymax), (0, 255, 0), 1)
+                cropped_face = image[ymin:ymax, xmin:xmax]
 
-        return coords, image
+                cv2.rectangle(image, (xmin, ymin), (xmax, ymax), (0, 255, 0), 1)
+
+        #return coords
+        return cropped_face
 
     def initial_size(self, width, height):
         self.width = width

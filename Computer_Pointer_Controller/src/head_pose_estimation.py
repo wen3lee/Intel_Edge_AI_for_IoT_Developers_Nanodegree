@@ -2,6 +2,7 @@
 This is a sample class for a model. You may choose to use it as-is or make any changes to it.
 This has been provided just to give you an idea of how to structure your model class.
 '''
+import cv2
 
 from openvino.inference_engine import IENetwork, IECore
 
@@ -9,7 +10,7 @@ class ModelHeadPoseEstimation:
     '''
     Class for the Face Detection Model.
     '''
-    def __init__(self, model_name, device='CPU', extensions=None):
+    def __init__(self, model_name, device='CPU'):
         '''
         TODO: Use this to set your instance variables.
         '''
@@ -40,7 +41,12 @@ class ModelHeadPoseEstimation:
         '''
         frame = self.preprocess_input(image)
         outputs = self.net.infer({self.input_name:frame})
-        coords = self.preprocess_outputs(outputs[self.output_name])
+
+        # debug
+        #print("outputs:{}".format(outputs))
+
+        #coords = self.preprocess_output(outputs[self.output_name])
+        return self.preprocess_output(outputs)
 
     def check_model(self):
         pass
@@ -68,3 +74,10 @@ class ModelHeadPoseEstimation:
         # angle_y_fc: [1, 1] - Estimated yaw
         # angle_p_fc: [1, 1] - Estimated pitch
         # angle_r_fc: [1, 1] - Estimated roll
+
+        head_pose_angles = []
+        head_pose_angles.append(outputs['angle_y_fc'][0][0])
+        head_pose_angles.append(outputs['angle_p_fc'][0][0])
+        head_pose_angles.append(outputs['angle_r_fc'][0][0])
+
+        return head_pose_angles

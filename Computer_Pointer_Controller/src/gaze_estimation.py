@@ -9,7 +9,7 @@ class ModelGazeEstimation:
     '''
     Class for the Face Detection Model.
     '''
-    def __init__(self, model_name, device='CPU', extensions=None):
+    def __init__(self, model_name, device='CPU'):
         '''
         TODO: Use this to set your instance variables.
         '''
@@ -40,7 +40,7 @@ class ModelGazeEstimation:
         '''
         frame = self.preprocess_input(image)
         outputs = self.net.infer({self.input_name:frame})
-        coords = self.preprocess_outputs(outputs[self.output_name])
+        coords = self.preprocess_output(outputs[self.output_name])
 
     def check_model(self):
         pass
