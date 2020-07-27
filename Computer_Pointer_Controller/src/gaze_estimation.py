@@ -89,7 +89,7 @@ class ModelGazeEstimation:
         r_sin = math.sin(angle_r_fc * math.pi / 180.0)
 
         x = gaze_vector[0] * r_cos + gaze_vector[1] * r_sin
-        y = -gaze_vector[0] *  r_sin+ gaze_vector[1] * r_cos
+        y = -gaze_vector[0] * r_sin+ gaze_vector[1] * r_cos
 
         #debug
         #print("gaze_vector:{}".format(gaze_vector))

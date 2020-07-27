@@ -49,6 +49,9 @@ def main(args):
 
     class_face_detection.initial_size(initial_w, initial_h)
 
+    #mc = MouseController(precision='low', speed='slow')
+    mc = MouseController(precision='high', speed='fast')
+
     for flag, batch in feed.next_batch():
         if not flag:
             break
@@ -66,24 +69,26 @@ def main(args):
         head_pose_angles = class_head_pose_estimation.predict(cropped_face)
 
         # debug
-        #print("angle_y_fc:{}, angle_p_fc:{}, angle_r_fc:{}".format(head_pos
+        #print("angle_y_fc:{}, angle_p_fc:{}, angle_r_fc:{}".format(head_pose_angles[0], head_pose_angles[1], head_pose_angles[2]))
 
         # facial_landmarks_detection
-        left_eye_image, right_eye_image = class_facial_landmarks_detection.predict(cropped_face)
+        left_eye_image, right_eye_image, left_eye_center, right_eye_center= class_facial_landmarks_detection.predict(cropped_face)
 
         # gaze_estimation
         x, y, gaze_vector = class_gaze_estimation.predict(left_eye_image, right_eye_image, head_pose_angles)
 
+        cv2.line(cropped_face, left_eye_center, (int(left_eye_center[0] + gaze_vector[0] * 100), int(left_eye_center[1] - gaze_vector[1] * 100)), (255,255,255), 2)
+        cv2.line(cropped_face, right_eye_center, (int(right_eye_center[0] + gaze_vector[0] * 100), int(right_eye_center[1] - gaze_vector[1] * 100)), (255,255,255), 2)
+
         # output
-        #cv2.imshow('output', batch)
-        #cv2.waitKey(30)
-        #cv2.imwrite('output.jpg', batch);
+        cv2.imshow('output', batch)
+        cv2.waitKey(30)
+        cv2.imwrite('output.jpg', batch);
 
         out_video.write(batch)
 
-    # MouseController
-    mc = MouseController(precision='low', speed='slow')
-    #mc.move(x, y)
+        # MouseController
+        mc.move(x, y)
 
     total_time = time.time() - start_inference_time
     total_inference_time = round(total_time, 1)

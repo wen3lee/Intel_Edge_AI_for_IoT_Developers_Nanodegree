@@ -80,23 +80,26 @@ class ModelFacialLandmarksDetection:
         height, width, channel = image.shape
 
         # left eye
-        left_eye_xmin = int(outputs[0][0][0] * width - 5)
-        left_eye_xmax = int(outputs[0][0][0] * width + 5)
-        left_eye_ymin = int(outputs[1][0][0] * height - 5)
-        left_eye_ymax = int(outputs[1][0][0] * height + 5)
+        left_eye_xmin = int(outputs[0][0][0] * width - 20)
+        left_eye_xmax = int(outputs[0][0][0] * width + 20)
+        left_eye_ymin = int(outputs[1][0][0] * height - 20)
+        left_eye_ymax = int(outputs[1][0][0] * height + 20)
 
         left_eye_image = image[left_eye_ymin:left_eye_ymax, left_eye_xmin:left_eye_xmax]
-
-        cv2.rectangle(image, (left_eye_xmin, left_eye_ymin), (left_eye_xmax, left_eye_ymax), (0, 0, 255), 2)
+        left_eye_center = int((left_eye_xmin + left_eye_xmax) / 2), int((left_eye_ymin + left_eye_ymax) / 2)
+        cv2.rectangle(image, (left_eye_xmin, left_eye_ymin), (left_eye_xmax, left_eye_ymax), (0, 0, 255), 1)
 
         # right eye
-        right_eye_xmin = int(outputs[2][0][0] * width - 5)
-        right_eye_xmax = int(outputs[2][0][0] * width + 5)
-        right_eye_ymin = int(outputs[3][0][0] * height - 5)
-        right_eye_ymax = int(outputs[3][0][0] * height + 5)
+        right_eye_xmin = int(outputs[2][0][0] * width - 20)
+        right_eye_xmax = int(outputs[2][0][0] * width + 20)
+        right_eye_ymin = int(outputs[3][0][0] * height - 20)
+        right_eye_ymax = int(outputs[3][0][0] * height + 20)
 
         right_eye_image = image[right_eye_ymin:right_eye_ymax, right_eye_xmin:right_eye_xmax]
+        right_eye_center = int((right_eye_xmin + right_eye_xmax) / 2), int((right_eye_ymin + right_eye_ymax) / 2)
+        cv2.rectangle(image, (right_eye_xmin, right_eye_ymin), (right_eye_xmax, right_eye_ymax), (0, 0, 255), 1)
 
-        cv2.rectangle(image, (right_eye_xmin, right_eye_ymin), (right_eye_xmax, right_eye_ymax), (0, 0, 255), 2)
+        # debug
+        #print("left_eye_center:{}, right_eye_center:{}".format(left_eye_center, right_eye_center))
 
-        return left_eye_image, right_eye_image
+        return left_eye_image, right_eye_image, left_eye_center, right_eye_center
