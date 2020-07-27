@@ -21,10 +21,10 @@ class ModelHeadPoseEstimation:
         self.core = IECore()
         self.model = self.core.read_network(model=self.model_structure, weights=self.model_weights)
 
-        self.input_name=next(iter(self.model.inputs))
-        self.input_shape=self.model.inputs[self.input_name].shape
-        self.output_name=next(iter(self.model.outputs))
-        self.output_shape=self.model.outputs[self.output_name].shape
+        self.input_name = next(iter(self.model.inputs))
+        self.input_shape = self.model.inputs[self.input_name].shape
+        self.output_name = next(iter(self.model.outputs))
+        self.output_shape = self.model.outputs[self.output_name].shape
 
     def load_model(self):
         '''
@@ -74,7 +74,7 @@ class ModelHeadPoseEstimation:
         # angle_y_fc: [1, 1] - Estimated yaw
         # angle_p_fc: [1, 1] - Estimated pitch
         # angle_r_fc: [1, 1] - Estimated roll
-
+        
         head_pose_angles = []
         head_pose_angles.append(outputs['angle_y_fc'][0][0])
         head_pose_angles.append(outputs['angle_p_fc'][0][0])

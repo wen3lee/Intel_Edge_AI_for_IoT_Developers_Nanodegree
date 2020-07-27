@@ -2,6 +2,8 @@
 This is a sample class for a model. You may choose to use it as-is or make any changes to it.
 This has been provided just to give you an idea of how to structure your model class.
 '''
+import cv2
+import math
 
 from openvino.inference_engine import IENetwork, IECore
 
@@ -20,8 +22,13 @@ class ModelGazeEstimation:
         self.core = IECore()
         self.model = self.core.read_network(model=self.model_structure, weights=self.model_weights)
 
-        self.input_name=next(iter(self.model.inputs))
-        self.input_shape=self.model.inputs[self.input_name].shape
+        self.input_name = [i for i in self.model.inputs.keys()]
+
+        # debug
+        #print("self.input_name:{}".format(self.input_name))
+        #print("self.model.inputs[self.input_name[1]].shape:{}".format(self.model.inputs[self.input_name[1]].shape))
+
+        self.input_shape=self.model.inputs[self.input_name[1]].shape
         self.output_name=next(iter(self.model.outputs))
         self.output_shape=self.model.outputs[self.output_name].shape
 
@@ -33,14 +40,21 @@ class ModelGazeEstimation:
         '''
         self.net = self.core.load_network(network=self.model, device_name=self.device, num_requests=1)
 
-    def predict(self, image):
+    def predict(self, left_eye_image, right_eye_image, head_pose_angles):
         '''
         TODO: You will need to complete this method.
         This method is meant for running predictions on the input image.
         '''
-        frame = self.preprocess_input(image)
-        outputs = self.net.infer({self.input_name:frame})
-        coords = self.preprocess_output(outputs[self.output_name])
+        left_eye_frame = self.preprocess_input(left_eye_image)
+        right_eye_frame = self.preprocess_input(right_eye_image)
+
+        net_input = {'left_eye_image': left_eye_frame, 'right_eye_image': right_eye_frame, 'head_pose_angles': head_pose_angles}
+        outputs = self.net.infer(inputs=net_input)
+
+        # debug
+        #print("outputs:{}".format(outputs))
+
+        return self.preprocess_output(outputs, head_pose_angles)
 
     def check_model(self):
         pass
@@ -50,10 +64,9 @@ class ModelGazeEstimation:
         Before feeding the data into the model for inference,
         you might have to preprocess it. This function is where you can do that.
         '''
-        # left_eye_image: BxCxHxW    
+        # head_pose_angles: BxC
+        # left_eye_image: BxCxHxW
         # right_eye_image: BxCxHxW
-
-        #?? if 
 
         height = self.input_shape[2]
         width = self.input_shape[3]
@@ -62,13 +75,24 @@ class ModelGazeEstimation:
         image = image.transpose((2,0,1))
         image = image.reshape(1, 3, height, width)
 
-        # head_pose_angles: BxC
-
         return image
 
-    def preprocess_output(self, outputs):
+    def preprocess_output(self, outputs, head_pose_angles):
         '''
         Before feeding the output of this model to the next model,
         you might have to preprocess the output. This function is where you can do that.
         '''
-        # gaze_vector: [1, 3], containing Cartesian coordinates of gaze direction vector.
+        gaze_vector = outputs[self.output_name][0]
+
+        angle_r_fc = head_pose_angles[2]
+        r_cos = math.cos(angle_r_fc * math.pi / 180.0)
+        r_sin = math.sin(angle_r_fc * math.pi / 180.0)
+
+        x = gaze_vector[0] * r_cos + gaze_vector[1] * r_sin
+        y = -gaze_vector[0] *  r_sin+ gaze_vector[1] * r_cos
+
+        #debug
+        #print("gaze_vector:{}".format(gaze_vector))
+        #print("x:{}, y:{}".format(x, y))
+
+        return x, y, gaze_vector

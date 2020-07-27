@@ -21,10 +21,10 @@ class ModelFacialLandmarksDetection:
         self.core = IECore()
         self.model = self.core.read_network(model=self.model_structure, weights=self.model_weights)
 
-        self.input_name=next(iter(self.model.inputs))
-        self.input_shape=self.model.inputs[self.input_name].shape
-        self.output_name=next(iter(self.model.outputs))
-        self.output_shape=self.model.outputs[self.output_name].shape
+        self.input_name = next(iter(self.model.inputs))
+        self.input_shape = self.model.inputs[self.input_name].shape
+        self.output_name = next(iter(self.model.outputs))
+        self.output_shape = self.model.outputs[self.output_name].shape
 
     def load_model(self):
         '''

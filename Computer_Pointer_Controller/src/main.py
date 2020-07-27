@@ -72,7 +72,7 @@ def main(args):
         left_eye_image, right_eye_image = class_facial_landmarks_detection.predict(cropped_face)
 
         # gaze_estimation
-        #gaze_vector = class_gaze_estimation.predict(left_eye_image, right_eye_image, head_pose_angles)
+        x, y, gaze_vector = class_gaze_estimation.predict(left_eye_image, right_eye_image, head_pose_angles)
 
         # output
         #cv2.imshow('output', batch)
@@ -83,7 +83,7 @@ def main(args):
 
     # MouseController
     mc = MouseController(precision='low', speed='slow')
-    #mc.move(10, 10)
+    #mc.move(x, y)
 
     total_time = time.time() - start_inference_time
     total_inference_time = round(total_time, 1)
