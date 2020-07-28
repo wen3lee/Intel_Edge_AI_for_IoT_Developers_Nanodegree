@@ -32,7 +32,7 @@ def main(args):
     total_model_load_time = time.time() - start_model_load_time
 
     # input image
-    feed=InputFeeder(input_type='video', input_file=args.input)
+    feed=InputFeeder(input_type='video', input_file=args.input_path)
     feed.load_data()
 
     # output
@@ -108,7 +108,7 @@ if __name__=='__main__':
 
     parser.add_argument("-d", "--device", default="CPU")
     parser.add_argument("-t", "--threshold", default=0.9)
-    parser.add_argument("-i", "--input", required=True)
+    parser.add_argument("-i", "--input_path", required=True)
 
     args=parser.parse_args() 
     main(args)
