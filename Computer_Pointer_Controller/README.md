@@ -10,7 +10,7 @@ In addition, face-detection-adas-binary-0001 model is used for face detection, h
 python3 downloader.py --name face-detection-adas-binary-0001  -o ~/
 python3 downloader.py --name head-pose-estimation-adas-0001 -o ~/
 python3 downloader.py --name landmarks-regression-retail-0009  -o ~/
-python3 downloader.py --name gaze-estimation-adas-0002  -o ~/
+python3 downloader.py --name gaze-estimation-adas-0002  -o ~/  
 3. dependencies:
 * pyautogui
 pip3 install pyautogui
@@ -37,21 +37,21 @@ ex. python3 main.py --model_face_detection ~/intel/face-detection-adas-binary-00
 --threshold: face detection probability threshold
 
 ## Benchmarks
-1. FP32:
+1. FP32  
 loading time:
 <img src="images/loading_time_FP32.jpg">
 inference_time:
 <img src="images/inference_time_FP32.jpg">
 FPS:
 <img src="images/FPS_FP32.jpg">
-2. FP16
+2. FP16 <br /> 
 loading time:
 <img src="images/loading_time_FP16.jpg">
 inference_time:
 <img src="images/inference_time_FP16.jpg">
 FPS:
 <img src="images/FPS_FP16.jpg">
-3. INT8
+3. INT8 <br />   
 loading time:
 <img src="images/loading_time_INT8.jpg">
 inference_time:
