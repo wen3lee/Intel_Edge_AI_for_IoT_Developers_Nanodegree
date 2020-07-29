@@ -7,17 +7,17 @@ In addition, face-detection-adas-binary-0001 model is used for face detection, h
 ## Project Set Up and Installation
 1. Download the Openvino toolkit 2020R2 from the official website.
 2. 
-python3 downloader.py --name face-detection-adas-binary-0001  -o ~/
-python3 downloader.py --name head-pose-estimation-adas-0001 -o ~/
-python3 downloader.py --name landmarks-regression-retail-0009  -o ~/
-python3 downloader.py --name gaze-estimation-adas-0002  -o ~/  
+  python3 downloader.py --name face-detection-adas-binary-0001  -o ~/  
+  python3 downloader.py --name head-pose-estimation-adas-0001 -o ~/  
+  python3 downloader.py --name landmarks-regression-retail-0009 -o ~/  
+  python3 downloader.py --name gaze-estimation-adas-0002  -o ~/  
 3. dependencies:
-* pyautogui
-pip3 install pyautogui
-export DISPLAY=:0
-touch ~/.Xauthority 
-sudo apt-get install python3-tk python3-dev 
-* cv2
+* pyautogui  
+pip3 install pyautogui  
+export DISPLAY=:0  
+touch ~/.Xauthority   
+sudo apt-get install python3-tk python3-dev  
+* cv2  
 sudo apt-get install python-opencv
 4. directory structure
 <img src="images/tree.jpg">
