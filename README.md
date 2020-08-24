@@ -1,6 +1,6 @@
 Intel Edge AI for IoT Developers Nanodegree
 
-2020/4 - 
+2020/4 - 2020/7
 
 Include projects:
 
